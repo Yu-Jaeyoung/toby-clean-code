@@ -10,7 +10,6 @@ class MemberTest {
     Member member;
     PasswordEncoder passwordEncoder;
 
-
     @BeforeEach
     void setUp() {
         this.passwordEncoder = new PasswordEncoder() {
@@ -25,7 +24,7 @@ class MemberTest {
             }
         };
 
-        member = Member.create("jaeyoung@wisoft.io", "Jaeyoung", "secret", passwordEncoder);
+        member = Member.create(new MemberCreateRequest("jaeyoung@wisoft.io", "Jaeyoung", "secret"), passwordEncoder);
     }
 
     @Test
@@ -92,5 +91,18 @@ class MemberTest {
         member.changePassword("verysecret", passwordEncoder);
 
         assertThat(member.verifyPassword("verysecret", passwordEncoder)).isTrue();
+    }
+
+    @Test
+    void isActive() {
+        assertThat(member.isActive()).isFalse();
+
+        member.activate();
+
+        assertThat(member.isActive()).isTrue();
+
+        member.deactivate();
+
+        assertThat(member.isActive()).isFalse();
     }
 }
