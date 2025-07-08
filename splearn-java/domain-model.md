@@ -60,7 +60,7 @@ _Entity_
 - `activate()`: 가입을 완료 시킨다
 - `deactivate()`: 탈퇴시킨다
 - `verifyPassword()` : 비밀번호를 검증한다
-- `changeNickname()` : 닉네임을 변경한다 
+- `changeNickname()` : 닉네임을 변경한다
 - `changePassword()` : 비밀번호를 변경한
 
 #### 규칙
@@ -90,6 +90,14 @@ _Domain Service_
 
 - `encode()` : 비밀번호 암호화하기
 - `matches()` : 비밀번호가 일치하는지 확인
+
+### Email
+
+_Value Object_
+
+#### 속성
+
+- `address` : 이메일 주소
 
 ### 강사
 
