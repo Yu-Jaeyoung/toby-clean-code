@@ -2,7 +2,7 @@ package io.wisoft.splearn.domain;
 
 public class MemberFixture {
     public static MemberRegisterRequest createMemberRegisterRequest(String email) {
-        return new MemberRegisterRequest(email, "Jaeyoung", "secret");
+        return new MemberRegisterRequest(email, "Jaeyoung", "verysecret");
     }
 
     public static MemberRegisterRequest createMemberRegisterRequest() {
