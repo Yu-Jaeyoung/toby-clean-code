@@ -3,9 +3,7 @@ package io.wisoft.splearn.application;
 import io.wisoft.splearn.application.provided.MemberRegister;
 import io.wisoft.splearn.application.required.EmailSender;
 import io.wisoft.splearn.application.required.MemberRepository;
-import io.wisoft.splearn.domain.Member;
-import io.wisoft.splearn.domain.MemberRegisterRequest;
-import io.wisoft.splearn.domain.PasswordEncoder;
+import io.wisoft.splearn.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +16,24 @@ public class MemberService implements MemberRegister {
 
     @Override
     public Member register(MemberRegisterRequest registerRequest) {
-        // check
+        checkDuplicateEmail(registerRequest);
 
         Member member = Member.register(registerRequest, passwordEncoder);
 
         memberRepository.save(member);
 
-        emailSender.send(member.getEmail(), "등록을 완료해주세요.", "아래 링크를 클릭해서 등록을 완료해주세요.");
+        sendWelcomeEmail(member);
 
         return member;
+    }
+
+    private void sendWelcomeEmail(Member member) {
+        emailSender.send(member.getEmail(), "등록을 완료해주세요.", "아래 링크를 클릭해서 등록을 완료해주세요.");
+    }
+
+    private void checkDuplicateEmail(MemberRegisterRequest registerRequest) {
+        if (memberRepository.findByEmail(new Email(registerRequest.email())).isPresent()) {
+            throw new DuplicateEmailException("이미 사용중인 이메일입니다: " + registerRequest.email());
+        }
     }
 }
