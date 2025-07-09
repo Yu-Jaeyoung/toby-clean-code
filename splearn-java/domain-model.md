@@ -61,7 +61,7 @@ _Entity_
 - `deactivate()`: 탈퇴시킨다
 - `verifyPassword()` : 비밀번호를 검증한다
 - `changeNickname()` : 닉네임을 변경한다
-- `changePassword()` : 비밀번호를 변경한
+- `changePassword()` : 비밀번호를 변경한다
 
 #### 규칙
 
