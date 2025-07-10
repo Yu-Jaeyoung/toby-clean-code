@@ -8,7 +8,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import static java.util.Objects.requireNonNull;
-import static org.springframework.util.Assert.*;
+import static org.springframework.util.Assert.state;
 
 @Entity
 @Getter
