@@ -1,6 +1,6 @@
-package io.wisoft.splearn.application.required;
+package io.wisoft.splearn.application.member.required;
 
-import io.wisoft.splearn.domain.Email;
+import io.wisoft.splearn.domain.shared.Email;
 
 /**
  * 이메일을 발송한다

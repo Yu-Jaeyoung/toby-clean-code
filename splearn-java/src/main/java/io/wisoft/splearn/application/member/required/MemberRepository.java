@@ -1,7 +1,7 @@
-package io.wisoft.splearn.application.required;
+package io.wisoft.splearn.application.member.required;
 
-import io.wisoft.splearn.domain.Email;
-import io.wisoft.splearn.domain.Member;
+import io.wisoft.splearn.domain.member.Member;
+import io.wisoft.splearn.domain.shared.Email;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;

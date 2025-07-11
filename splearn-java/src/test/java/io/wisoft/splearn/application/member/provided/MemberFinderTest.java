@@ -1,8 +1,8 @@
-package io.wisoft.splearn.application.provided;
+package io.wisoft.splearn.application.member.provided;
 
 import io.wisoft.splearn.SplearnTestConfiguration;
-import io.wisoft.splearn.domain.Member;
-import io.wisoft.splearn.domain.MemberFixture;
+import io.wisoft.splearn.domain.member.Member;
+import io.wisoft.splearn.domain.member.MemberFixture;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

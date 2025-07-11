@@ -48,11 +48,13 @@
 _Entity_
 
 #### 속성
+
 - `id` : `Long`
 - `email`: 이메일 - Natural ID
 - `nickname`: 닉네임
 - `passwordHash`: 비밀번호 해시
 - `status`: `MemberStatus` 회원 상태
+- `detail` : `MemberDetail` 1:1
 
 #### 행위
 
@@ -72,6 +74,19 @@ _Entity_
 - 회원의 비밀번호는 해시를 만들어서 저장한다
 - 비밀번호를 해시를 이용해서 검증한다
 
+### 회원 상세 (MemberDetail)
+
+- `id` : `Long`
+- `profile` : 프로필 주소
+- `introduction` : 자기 소개
+- `registeredAt` : 등록 일시
+- `activatedAt` : 등록 완료 일시
+- `deactivatedAt` : 탈퇴 일시
+
+#### 행위
+
+-
+
 ### 회원 상태 (MemberStatus)
 
 _Enum_
@@ -83,6 +98,7 @@ _Enum_
 - `DEACTIVATED`: 탈퇴
 
 ### DuplicatedEmailException
+
 _Exception_
 
 ### 비밀번호 인코더(PasswordEncoder)

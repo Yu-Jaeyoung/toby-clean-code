@@ -1,6 +1,6 @@
 package io.wisoft.splearn.adapter.security;
 
-import io.wisoft.splearn.domain.PasswordEncoder;
+import io.wisoft.splearn.domain.member.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package io.wisoft.splearn.adapter.integration;
 
-import io.wisoft.splearn.application.required.EmailSender;
-import io.wisoft.splearn.domain.Email;
+import io.wisoft.splearn.application.member.required.EmailSender;
+import io.wisoft.splearn.domain.shared.Email;
 import org.springframework.context.annotation.Fallback;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,11 @@
-package io.wisoft.splearn.application;
+package io.wisoft.splearn.application.member;
 
-import io.wisoft.splearn.application.provided.MemberFinder;
-import io.wisoft.splearn.application.provided.MemberRegister;
-import io.wisoft.splearn.application.required.EmailSender;
-import io.wisoft.splearn.application.required.MemberRepository;
-import io.wisoft.splearn.domain.*;
+import io.wisoft.splearn.application.member.provided.MemberFinder;
+import io.wisoft.splearn.application.member.provided.MemberRegister;
+import io.wisoft.splearn.application.member.required.EmailSender;
+import io.wisoft.splearn.application.member.required.MemberRepository;
+import io.wisoft.splearn.domain.member.*;
+import io.wisoft.splearn.domain.shared.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,24 @@ public class MemberModifyService implements MemberRegister {
         Member member = memberFinder.find(memberId);
 
         member.activate();
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member deactivate(Long memberId) {
+        Member member = memberFinder.find(memberId);
+
+        member.deactivate();
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member updateInfo(Long memberId, MemberInfoUpdateRequest updateRequest) {
+        Member member = memberFinder.find(memberId);
+
+        member.updateInfo(updateRequest);
 
         return memberRepository.save(member);
     }

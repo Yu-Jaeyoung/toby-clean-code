@@ -1,8 +1,8 @@
 package io.wisoft.splearn;
 
-import io.wisoft.splearn.application.required.EmailSender;
-import io.wisoft.splearn.domain.MemberFixture;
-import io.wisoft.splearn.domain.PasswordEncoder;
+import io.wisoft.splearn.application.member.required.EmailSender;
+import io.wisoft.splearn.domain.member.MemberFixture;
+import io.wisoft.splearn.domain.member.PasswordEncoder;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 

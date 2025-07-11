@@ -1,4 +1,4 @@
-package io.wisoft.splearn.domain;
+package io.wisoft.splearn.domain.member;
 
 public interface PasswordEncoder {
     String encode(String password);

@@ -1,4 +1,4 @@
-package io.wisoft.splearn.domain;
+package io.wisoft.splearn.domain.member;
 
 public class MemberFixture {
     public static MemberRegisterRequest createMemberRegisterRequest(String email) {

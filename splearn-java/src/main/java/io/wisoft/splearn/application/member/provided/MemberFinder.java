@@ -1,6 +1,6 @@
-package io.wisoft.splearn.application.provided;
+package io.wisoft.splearn.application.member.provided;
 
-import io.wisoft.splearn.domain.Member;
+import io.wisoft.splearn.domain.member.Member;
 
 /**
  * 회원을 조회한다

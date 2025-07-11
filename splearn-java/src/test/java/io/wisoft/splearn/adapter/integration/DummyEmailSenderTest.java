@@ -1,6 +1,6 @@
 package io.wisoft.splearn.adapter.integration;
 
-import io.wisoft.splearn.domain.Email;
+import io.wisoft.splearn.domain.shared.Email;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;

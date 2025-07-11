@@ -1,4 +1,4 @@
-package io.wisoft.splearn.domain;
+package io.wisoft.splearn.domain.shared;
 
 import org.junit.jupiter.api.Test;
 

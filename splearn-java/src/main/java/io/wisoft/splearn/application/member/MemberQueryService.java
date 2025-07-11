@@ -1,8 +1,8 @@
-package io.wisoft.splearn.application;
+package io.wisoft.splearn.application.member;
 
-import io.wisoft.splearn.application.provided.MemberFinder;
-import io.wisoft.splearn.application.required.MemberRepository;
-import io.wisoft.splearn.domain.Member;
+import io.wisoft.splearn.application.member.provided.MemberFinder;
+import io.wisoft.splearn.application.member.required.MemberRepository;
+import io.wisoft.splearn.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
