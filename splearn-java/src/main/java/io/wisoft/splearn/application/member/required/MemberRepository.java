@@ -1,7 +1,9 @@
 package io.wisoft.splearn.application.member.required;
 
 import io.wisoft.splearn.domain.member.Member;
+import io.wisoft.splearn.domain.member.Profile;
 import io.wisoft.splearn.domain.shared.Email;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
@@ -15,4 +17,7 @@ public interface MemberRepository extends Repository<Member, Long> {
     Optional<Member> findByEmail(Email email);
 
     Optional<Member> findById(Long memberId);
+
+    @Query("select m from Member m where m.detail.profile = :profile")
+    Optional<Member> findByProfile(Profile profile);
 }

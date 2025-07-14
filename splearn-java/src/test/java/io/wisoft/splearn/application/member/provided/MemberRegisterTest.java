@@ -67,6 +67,13 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
         return member;
     }
 
+    private Member registerMember(String email) {
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest(email));
+        entityManager.flush();
+        entityManager.clear();
+        return member;
+    }
+
     @Test
     void updateInfo() {
         Member member = registerMember();
@@ -79,6 +86,41 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
         member = memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("jackyu", "jaeyoungyu", "자기소개"));
 
         assertThat(member.getDetail().getProfile().address()).isEqualTo("jaeyoungyu");
+    }
+
+    @Test
+    void updateInfoFail() {
+        Member member = registerMember();
+
+        memberRegister.activate(member.getId());
+
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("jackyu", "jaeyoungyu", "자기소개"));
+
+        Member member2 = registerMember("jaeyoung2@wisoft.io");
+
+        memberRegister.activate(member2.getId());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // member2는 기존의 member와 같은 profile을 사용할 수 없다.
+        assertThatThrownBy(() ->
+                memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("jackjack", "jaeyoungyu", "자기소개"))
+        ).isInstanceOf(DuplicateProfileException.class);
+
+        // 다른 프로필 주소로는 변경 가능
+        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("jackjack", "jaeyoungyu2", "자기소개"));
+
+        // 기존 프로필 주소를 바꾸는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("jackyu", "jaeyoungyu1", "자기소개"));
+
+        // 프로필 주소를 제거하는 것도 가능
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("jackyu", "", "자기소개"));
+
+        // 프로필 주소 중복은 허용하지 않음
+        assertThatThrownBy(() ->
+                memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("jackyu", "jaeyoungyu2", "자기소개"))
+        ).isInstanceOf(DuplicateProfileException.class);
     }
 
     @Test
