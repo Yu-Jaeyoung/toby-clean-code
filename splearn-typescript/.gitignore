@@ -8,3 +8,5 @@ node_modules/
 docker/.env
 .idea
 postgres-data
+data
+init
