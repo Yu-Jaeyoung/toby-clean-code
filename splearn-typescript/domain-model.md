@@ -48,9 +48,12 @@ _Entity_
 
 #### 행위
 
-- `constructor()`: 회원 생성: email, nickname, passwordHash, status
+- `static create()`: 회원 생성: email, nickname, password, passwordEncoder
 - `activate()`: 가입을 완료 시킨다
 - `deactivate()`: 탈퇴 시킨다
+- `verifyPassword()`: 비밀번호를 검증한다
+- `changeNickname()`: 닉네임을 변경한다
+- `changePassword()`: 비밀번호를 변경한다
 
 #### 규칙
 
@@ -68,6 +71,15 @@ _Enum_
 - `PENDING`: 가입 대기
 - `ACTIVE`: 가입 완료
 - `DEACTIVATED`: 탈퇴
+
+### 비밀번호 인코더(PasswordEncoder)
+
+_Domain Service_
+
+#### 행위
+
+- `encode()`: 비밀번호를 암호화한다
+- `matches()`: 비밀번호가 암호화된 값과 일치하는지 확인한다
 
 ### 강사
 

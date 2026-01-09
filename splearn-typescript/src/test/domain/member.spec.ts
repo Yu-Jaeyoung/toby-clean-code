@@ -1,25 +1,38 @@
-import { describe, expect, it } from "bun:test";
+import { beforeEach, describe, expect, it } from "bun:test";
 
 import { Member } from "@src/main/domain/member";
 import { MemberStatus } from "@src/main/domain/member-status";
 import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 
-describe("MemberTest", () => {
-  it("createMember", () => {
-    const member = new Member("jaeyoung@splearn.app", "jaeyoung", "hashedPassword");
+import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
+describe("MemberTest", () => {
+  let member: Member;
+  let passwordEncoder: PasswordEncoder;
+
+  beforeEach(() => {
+    passwordEncoder = {
+      encode: (password: string) => password.toUpperCase(),
+      matches: (
+        password: string,
+        passwordHash: string,
+      ) => passwordEncoder.encode(password) === passwordHash,
+    };
+
+    member = Member.create("jaeyoung@splearn.app", "jaeyoung", "secret", passwordEncoder);
+  });
+
+  it("createMember", () => {
     expect(member.getStatus())
       .toEqual(MemberStatus.PENDING);
   });
 
   it("constructorNullCheck", () => {
-    expect(() => new Member(null as any, "jaeyouung", "secret"))
+    expect(() => Member.create(null as any, "jaeyoung", "secret", passwordEncoder))
       .toThrow(IllegalArgumentException);
   });
 
   it("activate", () => {
-    const member = new Member("jaeyoung@splearn.app", "jaeyoung", "hashedPassword");
-
     member.activate();
 
     expect(member.getStatus())
@@ -27,8 +40,6 @@ describe("MemberTest", () => {
   });
 
   it("activateFail", () => {
-    const member = new Member("jaeyoung@splearn.app", "jaeyoung", "hashedPassword");
-
     member.activate();
 
     expect(() => member.activate())
@@ -36,7 +47,6 @@ describe("MemberTest", () => {
   });
 
   it("deactivate", () => {
-    const member = new Member("jaeyoung@splearn.app", "jaeyoung", "hashedPassword");
     member.activate();
 
     member.deactivate();
@@ -46,8 +56,6 @@ describe("MemberTest", () => {
   });
 
   it("deactivateFail", () => {
-    const member = new Member("jaeyoung@splearn.app", "jaeyoung", "hashedPassword");
-
     expect(() => member.deactivate())
       .toThrow(IllegalStateException);
 
@@ -56,5 +64,30 @@ describe("MemberTest", () => {
 
     expect(() => member.deactivate())
       .toThrow(IllegalStateException);
+  });
+
+  it("verifyPassword", () => {
+    expect(member.verifyPassword("secret", passwordEncoder))
+      .toBeTrue();
+
+    expect(member.verifyPassword("hello", passwordEncoder))
+      .toBeFalse();
+  });
+
+  it("changeNickname", () => {
+    expect(member.getNickname())
+      .toEqual("jaeyoung");
+
+    member.changeNickname("jack");
+
+    expect(member.getNickname())
+      .toEqual("jack");
+  });
+
+  it("changePassword", () => {
+    member.changePassword("verysecret", passwordEncoder);
+
+    expect(member.verifyPassword("verysecret", passwordEncoder))
+      .toBeTrue();
   });
 });
