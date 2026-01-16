@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from "bun:test";
 import { Member } from "@src/main/domain/member";
 import { MemberStatus } from "@src/main/domain/member-status";
 import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
+import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
@@ -11,19 +12,8 @@ describe("MemberTest", () => {
   let passwordEncoder: PasswordEncoder;
 
   beforeEach(() => {
-    passwordEncoder = {
-      encode: (password: string) => password.toUpperCase(),
-      matches: (
-        password: string,
-        passwordHash: string,
-      ) => passwordEncoder.encode(password) === passwordHash,
-    };
-
-    member = Member.register({
-      email: "jaeyoung@splearn.app",
-      nickname: "jaeyoung",
-      password: "secret",
-    }, passwordEncoder);
+    passwordEncoder = createPasswordEncoder();
+    member = Member.register(createMemberRegisterRequest(), passwordEncoder);
   });
 
   it("registerMember", () => {
@@ -115,11 +105,7 @@ describe("MemberTest", () => {
   });
 
   it("invalidEmail", () => {
-    expect(() => Member.register({
-      email: "invalid Email",
-      nickname: "jaeyoung",
-      password: "secret",
-    }, passwordEncoder))
+    expect(() => Member.register(createMemberRegisterRequest("invalid email"), passwordEncoder))
       .toThrow(IllegalArgumentException);
   });
 });

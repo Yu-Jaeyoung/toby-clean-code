@@ -1,12 +1,15 @@
+import { Column } from "typeorm";
+
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 export class Email {
-  readonly address: string;
+  @Column({ name: "email" })
+  readonly address: string | undefined;
 
   private static emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,7}$/;
 
   constructor(address: string) {
-    if (!Email.emailRegex.test(address)) {
+    if (address && !Email.emailRegex.test(address)) {
       throw new IllegalArgumentException("Invalid email format");
     }
 

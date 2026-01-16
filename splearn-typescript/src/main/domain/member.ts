@@ -1,3 +1,5 @@
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 import { Email } from "@src/main/domain/email";
 import { Assert } from "@src/common/util/assert";
 import { MemberStatus } from "@src/main/domain/member-status";
@@ -6,13 +8,38 @@ import { IllegalArgumentException } from "@src/common/exception/exceptions";
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 import type { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 
+@Entity()
 export class Member {
-  private email: Email;
+  @PrimaryGeneratedColumn()
+  private id: number;
+
+  /**
+   * @Column({
+   *     type: 'varchar',
+   *     transformer: {
+   *       to: (email: Email) => (email ? email.address : null),
+   *
+   *       from: (email: string) => (email ? new Email(email) : null),
+   *     },
+   * })
+   */
+  @Column(() => Email, { prefix: false })
+  email: Email;
+
+  @Column()
   private nickname: string;
+
+  @Column()
   private passwordHash: string;
+
+  @Column({
+    type: "enum",
+    enum: MemberStatus,
+    default: MemberStatus.PENDING,
+  })
   private status: MemberStatus;
 
-  private constructor() {
+  protected constructor() {
   }
 
   public static register(
@@ -40,6 +67,10 @@ export class Member {
     member.status = MemberStatus.PENDING;
 
     return member;
+  }
+
+  getId(): number {
+    return this.id;
   }
 
   getEmail(): Email {
