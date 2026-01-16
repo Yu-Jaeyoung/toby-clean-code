@@ -19,20 +19,20 @@ describe("MemberTest", () => {
       ) => passwordEncoder.encode(password) === passwordHash,
     };
 
-    member = Member.create({
+    member = Member.register({
       email: "jaeyoung@splearn.app",
       nickname: "jaeyoung",
       password: "secret",
     }, passwordEncoder);
   });
 
-  it("createMember", () => {
+  it("registerMember", () => {
     expect(member.getStatus())
       .toEqual(MemberStatus.PENDING);
   });
 
   it("constructorNullCheck", () => {
-    expect(() => Member.create({
+    expect(() => Member.register({
       email: null as any,
       nickname: "jaeyoung",
       password: "secret",
@@ -115,7 +115,7 @@ describe("MemberTest", () => {
   });
 
   it("invalidEmail", () => {
-    expect(() => Member.create({
+    expect(() => Member.register({
       email: "invalid Email",
       nickname: "jaeyoung",
       password: "secret",

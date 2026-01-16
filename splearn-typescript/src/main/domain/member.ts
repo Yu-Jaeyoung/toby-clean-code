@@ -4,7 +4,7 @@ import { MemberStatus } from "@src/main/domain/member-status";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
-import type { MemberCreateRequest } from "@src/main/domain/member-create-request";
+import type { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 
 export class Member {
   private email: Email;
@@ -15,27 +15,27 @@ export class Member {
   private constructor() {
   }
 
-  public static create(
-    createRequest: MemberCreateRequest,
+  public static register(
+    registerRequest: MemberRegisterRequest,
     passwordEncoder: PasswordEncoder,
   ): Member {
     const member = new Member();
 
-    if (!createRequest.email) {
+    if (!registerRequest.email) {
       throw new IllegalArgumentException("Invalid member properties");
     }
 
-    if (!createRequest.nickname) {
+    if (!registerRequest.nickname) {
       throw new IllegalArgumentException("Invalid member properties");
     }
 
-    if (!createRequest.password) {
+    if (!registerRequest.password) {
       throw new IllegalArgumentException("Invalid member properties");
     }
 
-    member.email = new Email(createRequest.email);
-    member.nickname = createRequest.nickname;
-    member.passwordHash = passwordEncoder.encode(createRequest.password);
+    member.email = new Email(registerRequest.email);
+    member.nickname = registerRequest.nickname;
+    member.passwordHash = passwordEncoder.encode(registerRequest.password);
 
     member.status = MemberStatus.PENDING;
 
