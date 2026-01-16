@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 
+import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 import { Member } from "@src/main/domain/member";
 import { MemberStatus } from "@src/main/domain/member-status";
-import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
@@ -19,7 +19,11 @@ describe("MemberTest", () => {
       ) => passwordEncoder.encode(password) === passwordHash,
     };
 
-    member = Member.create("jaeyoung@splearn.app", "jaeyoung", "secret", passwordEncoder);
+    member = Member.create({
+      email: "jaeyoung@splearn.app",
+      nickname: "jaeyoung",
+      password: "secret",
+    }, passwordEncoder);
   });
 
   it("createMember", () => {
@@ -28,7 +32,11 @@ describe("MemberTest", () => {
   });
 
   it("constructorNullCheck", () => {
-    expect(() => Member.create(null as any, "jaeyoung", "secret", passwordEncoder))
+    expect(() => Member.create({
+      email: null as any,
+      nickname: "jaeyoung",
+      password: "secret",
+    }, passwordEncoder))
       .toThrow(IllegalArgumentException);
   });
 
@@ -89,5 +97,20 @@ describe("MemberTest", () => {
 
     expect(member.verifyPassword("verysecret", passwordEncoder))
       .toBeTrue();
+  });
+
+  it("isActive", () => {
+    expect(member.isActive())
+      .toBeFalse();
+
+    member.activate();
+
+    expect(member.isActive())
+      .toBeTrue();
+
+    member.deactivate();
+
+    expect(member.isActive())
+      .toBeFalse();
   });
 });

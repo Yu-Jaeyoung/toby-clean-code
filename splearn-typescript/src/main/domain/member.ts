@@ -3,26 +3,42 @@ import { MemberStatus } from "@src/main/domain/member-status";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
+import type { MemberCreateRequest } from "@src/main/domain/member-create-request";
 
 export class Member {
-  private readonly email: string;
+  private email: string;
   private nickname: string;
   private passwordHash: string;
   private status: MemberStatus;
 
-  private constructor(
-    email: string,
-    nickname: string,
-    passwordHash: string,
-  ) {
-    if (!email) {
+  private constructor() {
+  }
+
+  public static create(
+    createRequest: MemberCreateRequest,
+    passwordEncoder: PasswordEncoder,
+  ): Member {
+    const member = new Member();
+
+    if (!createRequest.email) {
       throw new IllegalArgumentException("Invalid member properties");
     }
 
-    this.email = email;
-    this.nickname = nickname;
-    this.passwordHash = passwordHash;
-    this.status = MemberStatus.PENDING;
+    if (!createRequest.nickname) {
+      throw new IllegalArgumentException("Invalid member properties");
+    }
+
+    if (!createRequest.password) {
+      throw new IllegalArgumentException("Invalid member properties");
+    }
+
+    member.email = createRequest.email;
+    member.nickname = createRequest.nickname;
+    member.passwordHash = passwordEncoder.encode(createRequest.password);
+
+    member.status = MemberStatus.PENDING;
+
+    return member;
   }
 
   getEmail(): string {
@@ -39,15 +55,6 @@ export class Member {
 
   getStatus(): MemberStatus {
     return this.status;
-  }
-
-  static create(
-    email: string,
-    nickname: string,
-    password: string,
-    passwordEncoder: PasswordEncoder,
-  ): Member {
-    return new Member(email, nickname, passwordEncoder.encode(password));
   }
 
   activate() {
@@ -70,6 +77,10 @@ export class Member {
   }
 
   changeNickname(nickname: string) {
+    if (!nickname) {
+      throw new IllegalArgumentException("Invalid nickname properties");
+    }
+
     this.nickname = nickname;
   }
 
@@ -77,6 +88,14 @@ export class Member {
     password: string,
     passwordEncoder: PasswordEncoder,
   ) {
+    if (!password) {
+      throw new IllegalArgumentException("Invalid passwordHash properties");
+    }
+
     this.passwordHash = passwordEncoder.encode(password);
+  }
+
+  isActive() {
+    return this.status === MemberStatus.ACTIVE;
   }
 }
