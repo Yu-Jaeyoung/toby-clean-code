@@ -1,3 +1,4 @@
+import { Email } from "@src/main/domain/email";
 import { Assert } from "@src/common/util/assert";
 import { MemberStatus } from "@src/main/domain/member-status";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
@@ -6,7 +7,7 @@ import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 import type { MemberCreateRequest } from "@src/main/domain/member-create-request";
 
 export class Member {
-  private email: string;
+  private email: Email;
   private nickname: string;
   private passwordHash: string;
   private status: MemberStatus;
@@ -32,7 +33,7 @@ export class Member {
       throw new IllegalArgumentException("Invalid member properties");
     }
 
-    member.email = createRequest.email;
+    member.email = new Email(createRequest.email);
     member.nickname = createRequest.nickname;
     member.passwordHash = passwordEncoder.encode(createRequest.password);
 
@@ -41,7 +42,7 @@ export class Member {
     return member;
   }
 
-  getEmail(): string {
+  getEmail(): Email {
     return this.email;
   }
 

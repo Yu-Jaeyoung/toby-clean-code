@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 
-import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 import { Member } from "@src/main/domain/member";
 import { MemberStatus } from "@src/main/domain/member-status";
+import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
@@ -112,5 +112,14 @@ describe("MemberTest", () => {
 
     expect(member.isActive())
       .toBeFalse();
+  });
+
+  it("invalidEmail", () => {
+    expect(() => Member.create({
+      email: "invalid Email",
+      nickname: "jaeyoung",
+      password: "secret",
+    }, passwordEncoder))
+      .toThrow(IllegalArgumentException);
   });
 });
