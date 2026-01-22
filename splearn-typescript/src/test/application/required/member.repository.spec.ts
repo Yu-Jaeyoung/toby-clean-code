@@ -1,12 +1,16 @@
 import { beforeAll, describe, expect, it } from "bun:test";
 
+import { QueryFailedError } from "typeorm";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+
 import { AppModule } from "@src/app.module";
-import { MemberRepository } from "@src/main/application/required/member.repository";
 import { Member } from "@src/main/domain/member";
+
 import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
+
+import type { MemberRepository } from "@src/main/application/required/member.repository";
 
 describe("MemberRepositoryTest", () => {
 
@@ -24,8 +28,8 @@ describe("MemberRepositoryTest", () => {
     await app.init();
   });
 
-  it("createMember", async() => {
-    const member: Member = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+  it("should create member", async() => {
+    const member: Member = Member.register(createMemberRegisterRequest("aaa@splearn.app"), createPasswordEncoder());
 
     expect(member.getId())
       .toBeUndefined();
@@ -36,13 +40,12 @@ describe("MemberRepositoryTest", () => {
       .toBeDefined();
   });
 
-  // it("findMemberById", async() => {
-  //   const member1: Member = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
-  //
-  //   await memberRepository.save(member1);
-  //
-  //   const member2 = await memberRepository.find();
-  //
-  //   console.log(member2);
-  // });
+  it("should not create with duplicated email", async() => {
+    const member1: Member = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+    await memberRepository.save(member1);
+
+    const member2: Member = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+    expect(async() => await memberRepository.save(member2))
+      .toThrow(QueryFailedError);
+  });
 });
