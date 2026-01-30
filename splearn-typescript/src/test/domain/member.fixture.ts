@@ -1,3 +1,4 @@
+import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
 export function createPasswordEncoder(): PasswordEncoder {
@@ -16,17 +17,9 @@ export function createPasswordEncoder(): PasswordEncoder {
 }
 
 export function createMemberRegisterRequest(email?: string) {
-  if (email) {
-    return {
-      email,
-      nickname: "jaeyoung",
-      password: "secret",
-    };
-  }
-
-  return {
-    email: "jaeyoung@splearn.app",
-    nickname: "jaeyoung",
-    password: "secret",
-  };
+  return new MemberRegisterRequest(
+    email ?? "jaeyoung@splearn.app",
+    "jaeyoung",
+    "secret",
+  );
 }

@@ -3,10 +3,10 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Email } from "@src/main/domain/email";
 import { Assert } from "@src/common/util/assert";
 import { MemberStatus } from "@src/main/domain/member-status";
+import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
-import type { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 
 @Entity()
 export class Member {

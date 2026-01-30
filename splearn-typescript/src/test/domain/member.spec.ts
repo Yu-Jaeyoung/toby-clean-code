@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "bun:test";
 
 import { Member } from "@src/main/domain/member";
 import { MemberStatus } from "@src/main/domain/member-status";
+import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
 import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
 
@@ -22,11 +23,7 @@ describe("MemberTest", () => {
   });
 
   it("constructorNullCheck", () => {
-    expect(() => Member.register({
-      email: null as any,
-      nickname: "jaeyoung",
-      password: "secret",
-    }, passwordEncoder))
+    expect(() => new MemberRegisterRequest(null as any, "jaeyoung", "secret"))
       .toThrow(IllegalArgumentException);
   });
 
@@ -105,7 +102,7 @@ describe("MemberTest", () => {
   });
 
   it("invalidEmail", () => {
-    expect(() => Member.register(createMemberRegisterRequest("invalid email"), passwordEncoder))
+    expect(() => new MemberRegisterRequest("invalid email", "jaeyoung", "secret"))
       .toThrow(IllegalArgumentException);
   });
 });
