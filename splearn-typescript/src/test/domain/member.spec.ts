@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 
-import { Member } from "@src/main/domain/member";
-import { MemberStatus } from "@src/main/domain/member-status";
-import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
 import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
+import { Member } from "@src/main/domain/member";
+import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
+import { MemberStatus } from "@src/main/domain/member-status";
 import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
@@ -20,11 +20,6 @@ describe("MemberTest", () => {
   it("registerMember", () => {
     expect(member.getStatus())
       .toEqual(MemberStatus.PENDING);
-  });
-
-  it("constructorNullCheck", () => {
-    expect(() => new MemberRegisterRequest(null as any, "jaeyoung", "secret"))
-      .toThrow(IllegalArgumentException);
   });
 
   it("activate", () => {
@@ -102,7 +97,9 @@ describe("MemberTest", () => {
   });
 
   it("invalidEmail", () => {
-    expect(() => new MemberRegisterRequest("invalid email", "jaeyoung", "secret"))
+    expect(() => {
+      Member.register(new MemberRegisterRequest("invalid email", "jaeyoung", "secret"), passwordEncoder);
+    })
       .toThrow(IllegalArgumentException);
   });
 });

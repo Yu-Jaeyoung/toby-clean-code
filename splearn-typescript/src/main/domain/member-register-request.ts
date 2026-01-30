@@ -1,29 +1,24 @@
-import { IllegalArgumentException } from "@src/common/exception/exceptions";
+import { IsEmail, IsString, Length } from "class-validator";
 
 export class MemberRegisterRequest {
-  private static emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,7}$/;
 
-  readonly email: string;
-  readonly nickname: string;
-  readonly password: string;
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @Length(5, 20)
+  nickname: string;
+
+  @IsString()
+  @Length(8, 100)
+  password: string;
+
 
   constructor(
     email: string,
     nickname: string,
     password: string,
   ) {
-    if (!MemberRegisterRequest.emailRegex.test(email)) {
-      throw new IllegalArgumentException("Invalid email format");
-    }
-
-    if (nickname.length < 5 || nickname.length > 10) {
-      throw new IllegalArgumentException("Nickname must be between 5 and 10 characters");
-    }
-
-    if (password.length < 5 || password.length > 20) {
-      throw new IllegalArgumentException("Password must be between 5 and 20 characters");
-    }
-
     this.email = email;
     this.nickname = nickname;
     this.password = password;
