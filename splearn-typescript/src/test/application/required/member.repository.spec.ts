@@ -2,12 +2,11 @@ import { beforeAll, describe, expect, it } from "bun:test";
 
 import { QueryFailedError } from "typeorm";
 import { INestApplication } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
+import { Test, TestingModule } from "@nestjs/testing";
 
-import { AppModule } from "@src/app.module";
 import { Member } from "@src/main/domain/member";
-
+import { AppModule } from "@src/app.module";
 import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
 
 import type { MemberRepository } from "@src/main/application/required/member.repository";
@@ -29,7 +28,8 @@ describe("MemberRepositoryTest", () => {
   });
 
   it("should create member", async() => {
-    const member: Member = Member.register(createMemberRegisterRequest("aaa@splearn.app"), createPasswordEncoder());
+    const member: Member
+      = Member.register(createMemberRegisterRequest("aaa@splearn.app"), createPasswordEncoder());
 
     expect(member.getId())
       .toBeUndefined();

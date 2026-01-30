@@ -1,6 +1,6 @@
-import { PasswordEncoder } from "@src/main/domain/password-encoder";
+import type { PasswordEncoder } from "@src/main/domain/password-encoder";
 
-export function createPasswordEncoder() {
+export function createPasswordEncoder(): PasswordEncoder {
   return {
     encode(password: string) {
       return password.toUpperCase();

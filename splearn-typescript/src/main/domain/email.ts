@@ -1,4 +1,4 @@
-import { Column, Unique } from "typeorm";
+import { Column } from "typeorm";
 
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 

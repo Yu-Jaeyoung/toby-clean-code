@@ -1,10 +1,14 @@
 import process from "node:process";
+
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { Member } from "@src/main/domain/member";
 import { Email } from "@src/main/domain/email";
+import { MemberService } from "@src/main/application/member.service";
+import { MemberRepositoryLive } from "@src/main/adapter/persistence/member.repository.live";
+import { EMAIL_SENDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
 
 @Module({
   imports: [
@@ -20,6 +24,24 @@ import { Email } from "@src/main/domain/email";
     }),
     TypeOrmModule.forFeature([ Member, Email ]),
   ],
+  exports: [ MemberService ],
+  providers: [
+    MemberService,
+    {
+      provide: MEMBER_REPOSITORY,
+      useClass: MemberRepositoryLive,
+    },
+    {
+      provide: EMAIL_SENDER,
+      useValue: null,
+    },
+    {
+      provide: PASSWORD_ENCODER,
+      useValue: null,
+    },
+  ],
+
 })
+
 export class AppModule {
 }

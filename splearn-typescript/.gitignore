@@ -11,3 +11,4 @@ postgres-data
 data
 init
 .env
+.claude

@@ -73,6 +73,10 @@ export class Member {
     return this.id;
   }
 
+  setId(id: number) {
+    this.id = id;
+  }
+
   getEmail(): Email {
     return this.email;
   }
