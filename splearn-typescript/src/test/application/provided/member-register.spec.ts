@@ -13,6 +13,7 @@ import { MemberModifyService } from "@src/main/application/member-modify.service
 import { DuplicateEmailException } from "@src/common/exception/exceptions";
 import { SplearnTestConfiguration } from "@src/test/splearn-test-configuration";
 import { createMemberRegisterRequest } from "@src/test/domain/member.fixture";
+
 import type { MemberRegister } from "@src/main/application/provided/member-register";
 
 describe("Member Service Test", () => {

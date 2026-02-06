@@ -8,6 +8,6 @@ export class DummyEmailSender implements EmailSender {
     subject: string,
     body: string,
   ): void {
-    console.log(`DummyEmailSender send email: ${ email }`);
+    console.log(`DummyEmailSender send email: ${ email.address }`);
   }
 }
