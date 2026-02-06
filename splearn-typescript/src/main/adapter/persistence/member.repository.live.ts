@@ -22,4 +22,8 @@ export class MemberRepositoryLive implements MemberRepository {
   async findByEmail(email: Email): Promise<Member | null> {
     return await this.repository.findOne({ where: { email: { address: email.address } } });
   }
+
+  async findById(memberId: number): Promise<Member | null> {
+    return await this.repository.findOne({ where: { id: memberId } as any });
+  }
 }

@@ -7,4 +7,6 @@ import type { MemberRegisterRequest } from "@src/main/domain/member-register-req
 
 export interface MemberRegister {
   register(registerRequest: MemberRegisterRequest): Promise<Member>;
+
+  activate(memberId: number): Promise<Member>;
 }

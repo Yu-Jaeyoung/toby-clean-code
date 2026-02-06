@@ -6,9 +6,10 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { Member } from "@src/main/domain/member";
 import { Email } from "@src/main/domain/email";
-import { MemberService } from "@src/main/application/member.service";
+import { MemberQueryService } from "@src/main/application/member-query.service";
+import { MemberModifyService } from "@src/main/application/member-modify.service";
 import { MemberRepositoryLive } from "@src/main/adapter/persistence/member.repository.live";
-import { EMAIL_SENDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
+import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
 
 @Module({
   imports: [
@@ -24,9 +25,10 @@ import { EMAIL_SENDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.toke
     }),
     TypeOrmModule.forFeature([ Member, Email ]),
   ],
-  exports: [ MemberService ],
+  exports: [ MemberModifyService, MemberQueryService ],
   providers: [
-    MemberService,
+    MemberModifyService,
+    MemberQueryService,
     {
       provide: MEMBER_REPOSITORY,
       useClass: MemberRepositoryLive,
@@ -38,6 +40,10 @@ import { EMAIL_SENDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.toke
     {
       provide: PASSWORD_ENCODER,
       useValue: null,
+    },
+    {
+      provide: MEMBER_FINDER,
+      useClass: MemberQueryService,
     },
   ],
 
