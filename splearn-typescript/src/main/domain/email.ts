@@ -3,7 +3,7 @@ import { Column } from "typeorm";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 export class Email {
-  @Column({ name: "email", unique: true })
+  @Column({ name: "email", unique: true, length: 100 })
   readonly address: string | undefined;
 
   private static emailRegex: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,7}$/;

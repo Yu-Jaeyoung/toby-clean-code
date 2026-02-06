@@ -11,7 +11,7 @@ export class SplearnTestConfiguration {
         subject: string,
         body: string,
       ): void => {
-        console.info(`To: ${ email }, Subject: ${ subject }, Body: ${ body }`);
+        console.info(`To: ${ email.address }, Subject: ${ subject }, Body: ${ body }`);
       },
     };
   }

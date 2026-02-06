@@ -26,10 +26,10 @@ export class Member {
   @Column(() => Email, { prefix: false })
   email: Email;
 
-  @Column()
+  @Column({ length: 100 })
   private nickname: string;
 
-  @Column()
+  @Column({ length: 200 })
   private passwordHash: string;
 
   @Column({
