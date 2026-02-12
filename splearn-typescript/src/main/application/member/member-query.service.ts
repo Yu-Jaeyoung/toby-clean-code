@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { Member } from "@src/main/domain/member";
+import { Member } from "@src/main/domain/member/member";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 import { MEMBER_REPOSITORY } from "@src/app.token";
 
-import type { MemberFinder } from "@src/main/application/provided/member-finder";
-import type { MemberRepository } from "@src/main/application/required/member.repository";
+import type { MemberFinder } from "@src/main/application/member/provided/member-finder";
+import type { MemberRepository } from "@src/main/application/member/required/member.repository";
 
 @Injectable()
 export class MemberQueryService implements MemberFinder {

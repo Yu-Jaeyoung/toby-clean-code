@@ -1,6 +1,6 @@
 import { describe, expect, it } from "bun:test";
 
-import { Email } from "@src/main/domain/email";
+import { Email } from "@src/main/domain/shared/email";
 
 describe("EmailTest", () => {
   it("equality", () => {

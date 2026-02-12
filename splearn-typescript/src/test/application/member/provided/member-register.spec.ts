@@ -8,13 +8,13 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { EMAIL_SENDER, PASSWORD_ENCODER } from "@src/app.token";
 
 import { AppModule } from "@src/app.module";
-import { MemberStatus } from "@src/main/domain/member-status";
-import { MemberModifyService } from "@src/main/application/member-modify.service";
+import { MemberStatus } from "@src/main/domain/member/member-status";
+import { MemberModifyService } from "@src/main/application/member/member-modify.service";
 import { DuplicateEmailException } from "@src/common/exception/exceptions";
 import { SplearnTestConfiguration } from "@src/test/splearn-test-configuration";
-import { createMemberRegisterRequest } from "@src/test/domain/member.fixture";
+import { createMemberRegisterRequest } from "@src/test/domain/member/member.fixture";
 
-import type { MemberRegister } from "@src/main/application/provided/member-register";
+import type { MemberRegister } from "@src/main/application/member/provided/member-register";
 
 describe("Member Service Test", () => {
   let app: INestApplication;

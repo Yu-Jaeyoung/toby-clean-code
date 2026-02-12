@@ -1,9 +1,21 @@
 import { IllegalStateException } from "@src/common/exception/exceptions";
 
 export class Assert {
-  static state(condition: boolean, message: string): asserts condition {
+  static state(
+    condition: boolean,
+    message: string,
+  ): asserts condition {
     if (!condition) {
       throw new IllegalStateException(message);
+    }
+  }
+
+  static isTrue(
+    condition: boolean,
+    message: string,
+  ): asserts condition {
+    if (!condition) {
+      throw new Error(message);
     }
   }
 

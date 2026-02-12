@@ -1,5 +1,5 @@
-import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
-import type { PasswordEncoder } from "@src/main/domain/password-encoder";
+import { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
+import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
 
 export function createPasswordEncoder(): PasswordEncoder {
   return {

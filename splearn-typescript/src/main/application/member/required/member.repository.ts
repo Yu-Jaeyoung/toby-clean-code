@@ -1,5 +1,5 @@
-import { Email } from "@src/main/domain/email";
-import { Member } from "@src/main/domain/member";
+import { Email } from "@src/main/domain/shared/email";
+import { Member } from "@src/main/domain/member/member";
 
 /**
  * 회원 정보를 저장하거나 조회한다

@@ -7,13 +7,13 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { EMAIL_SENDER, PASSWORD_ENCODER } from "@src/app.token";
 
 import { AppModule } from "@src/app.module";
-import { MemberModifyService } from "@src/main/application/member-modify.service";
+import { MemberModifyService } from "@src/main/application/member/member-modify.service";
 import { SplearnTestConfiguration } from "@src/test/splearn-test-configuration";
-import { createMemberRegisterRequest } from "@src/test/domain/member.fixture";
-import { MemberQueryService } from "@src/main/application/member-query.service";
+import { createMemberRegisterRequest } from "@src/test/domain/member/member.fixture";
+import { MemberQueryService } from "@src/main/application/member/member-query.service";
 
-import type { MemberFinder } from "@src/main/application/provided/member-finder";
-import type { MemberRegister } from "@src/main/application/provided/member-register";
+import type { MemberFinder } from "@src/main/application/member/provided/member-finder";
+import type { MemberRegister } from "@src/main/application/member/provided/member-register";
 
 describe("Member Finder Test", () => {
   let app: INestApplication;

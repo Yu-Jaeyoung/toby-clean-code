@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it } from "bun:test";
 
 import { IllegalArgumentException, IllegalStateException } from "@src/common/exception/exceptions";
-import { Member } from "@src/main/domain/member";
-import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
-import { MemberStatus } from "@src/main/domain/member-status";
-import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
+import { Member } from "@src/main/domain/member/member";
+import { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
+import { MemberStatus } from "@src/main/domain/member/member-status";
+import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member/member.fixture";
 
-import type { PasswordEncoder } from "@src/main/domain/password-encoder";
+import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
+import { MemberInfoUpdateRequest } from "@src/main/domain/member/member-info-update-request";
 
 describe("MemberTest", () => {
   let member: Member;
@@ -20,13 +21,25 @@ describe("MemberTest", () => {
   it("registerMember", () => {
     expect(member.getStatus())
       .toEqual(MemberStatus.PENDING);
+
+    expect(member.getDetail()
+                 .getRegisteredAt())
+      .toBeDefined();
   });
 
   it("activate", () => {
+    expect(member.getDetail()
+                 .getActivatedAt())
+      .not
+      .toBeDefined();
+
     member.activate();
 
     expect(member.getStatus())
       .toEqual(MemberStatus.ACTIVE);
+    expect(member.getDetail()
+                 .getActivatedAt())
+      .toBeDefined();
   });
 
   it("activateFail", () => {
@@ -43,6 +56,9 @@ describe("MemberTest", () => {
 
     expect(member.getStatus())
       .toEqual(MemberStatus.DEACTIVATED);
+    expect(member.getDetail()
+                 .getDeactivatedAt())
+      .toBeDefined();
   });
 
   it("deactivateFail", () => {
@@ -101,5 +117,25 @@ describe("MemberTest", () => {
       Member.register(new MemberRegisterRequest("invalid email", "jaeyoung", "secret"), passwordEncoder);
     })
       .toThrow(IllegalArgumentException);
+  });
+
+  it("should update Info", () => {
+    member.activate();
+
+    const request = new MemberInfoUpdateRequest("jacky", "jacky", "hi");
+    member.updateInfo(request);
+
+    expect(member.getNickname())
+      .toEqual(request.getNickname());
+
+    expect(member.getDetail()
+                 .getProfile()
+                 .getAddress())
+      .toEqual(request.getProfileAddress());
+
+    expect(member.getDetail()
+                 .getIntroduction())
+      .toEqual(request.getIntroduction());
+
   });
 });

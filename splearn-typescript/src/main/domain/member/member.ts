@@ -1,13 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Email } from "@src/main/domain/email";
+import { Email } from "@src/main/domain/shared/email";
 import { Assert } from "@src/common/util/assert";
-import { MemberStatus } from "@src/main/domain/member-status";
-import { MemberRegisterRequest } from "@src/main/domain/member-register-request";
+import { MemberDetail } from "@src/main/domain/member/member-detail";
+import { MemberStatus } from "@src/main/domain/member/member-status";
+import { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
-import type { PasswordEncoder } from "@src/main/domain/password-encoder";
-import { MemberDetail } from "@src/main/domain/member-detail";
+import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
+import { MemberInfoUpdateRequest } from "@src/main/domain/member/member-info-update-request";
 
 @Entity()
 export class Member {
@@ -40,8 +41,14 @@ export class Member {
   })
   private status: MemberStatus;
 
-  @Column(() => MemberDetail, { prefix: false })
-  private detail: MemberDetail;
+  // OnetoOne, fetchType - lazy, cascade all
+  // @Column(() => MemberDetail, { prefix: false })
+  @OneToOne(() => MemberDetail, {
+    cascade: [ "insert", "update", "remove" ],
+    eager: true,
+  })
+  @JoinColumn()
+  detail: MemberDetail;
 
   protected constructor() {
   }
@@ -51,6 +58,8 @@ export class Member {
     passwordEncoder: PasswordEncoder,
   ): Member {
     const member = new Member();
+
+    member.detail = MemberDetail.create();
 
     if (!registerRequest.email) {
       throw new IllegalArgumentException("Invalid member properties");
@@ -97,16 +106,22 @@ export class Member {
     return this.status;
   }
 
+  getDetail() {
+    return this.detail;
+  }
+
   activate() {
     Assert.state(this.status === MemberStatus.PENDING, "Member is already active");
 
     this.status = MemberStatus.ACTIVE;
+    this.detail.activate();
   }
 
   deactivate() {
     Assert.state(this.status === MemberStatus.ACTIVE, "Member is not active");
 
     this.status = MemberStatus.DEACTIVATED;
+    this.detail.deactivate();
   }
 
   verifyPassword(
@@ -114,6 +129,12 @@ export class Member {
     passwordEncoder: PasswordEncoder,
   ) {
     return passwordEncoder.matches(password, this.passwordHash);
+  }
+
+  updateInfo(updateRequest: MemberInfoUpdateRequest) {
+    this.nickname = updateRequest.getNickname();
+
+    this.detail.updateInfo(updateRequest);
   }
 
   changeNickname(nickname: string) {

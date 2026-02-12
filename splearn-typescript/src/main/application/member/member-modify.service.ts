@@ -1,17 +1,17 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { Email } from "@src/main/domain/email";
-import { Member } from "@src/main/domain/member";
+import { Email } from "@src/main/domain/shared/email";
+import { Member } from "@src/main/domain/member/member";
 import { DuplicateEmailException } from "@src/common/exception/exceptions";
 
 import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
 
-import type { EmailSender } from "@src/main/application/required/email-sender";
-import type { MemberRegister } from "@src/main/application/provided/member-register";
-import type { PasswordEncoder } from "@src/main/domain/password-encoder";
-import type { MemberRepository } from "@src/main/application/required/member.repository";
-import type { MemberRegisterRequest } from "@src/main/domain/member-register-request";
-import type { MemberFinder } from "@src/main/application/provided/member-finder";
+import type { EmailSender } from "@src/main/application/member/required/email-sender";
+import type { MemberRegister } from "@src/main/application/member/provided/member-register";
+import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
+import type { MemberRepository } from "@src/main/application/member/required/member.repository";
+import type { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
+import type { MemberFinder } from "@src/main/application/member/provided/member-finder";
 
 @Injectable()
 export class MemberModifyService implements MemberRegister {

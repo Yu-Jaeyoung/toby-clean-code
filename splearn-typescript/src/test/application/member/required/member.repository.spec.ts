@@ -2,14 +2,16 @@ import { beforeAll, describe, expect, it } from "bun:test";
 
 import { QueryFailedError } from "typeorm";
 import { INestApplication } from "@nestjs/common";
-import { getRepositoryToken } from "@nestjs/typeorm";
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { Member } from "@src/main/domain/member";
+import { Member } from "@src/main/domain/member/member";
 import { AppModule } from "@src/app.module";
-import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member.fixture";
+import { createMemberRegisterRequest, createPasswordEncoder } from "@src/test/domain/member/member.fixture";
 
-import type { MemberRepository } from "@src/main/application/required/member.repository";
+import type { MemberRepository } from "@src/main/application/member/required/member.repository";
+import { MemberStatus } from "@src/main/domain/member/member-status";
+
+import { MEMBER_REPOSITORY } from "@src/app.token";
 
 describe("MemberRepositoryTest", () => {
 
@@ -23,7 +25,7 @@ describe("MemberRepositoryTest", () => {
                                                    .compile();
 
     app = moduleFixture.createNestApplication();
-    memberRepository = moduleFixture.get<MemberRepository>(getRepositoryToken(Member));
+    memberRepository = moduleFixture.get<MemberRepository>(MEMBER_REPOSITORY);
     await app.init();
   });
 
@@ -37,6 +39,15 @@ describe("MemberRepositoryTest", () => {
     await memberRepository.save(member);
 
     expect(member.getId())
+      .toBeDefined();
+
+    const found = await memberRepository.findById(member.getId());
+
+    expect(found?.getStatus())
+      .toEqual(MemberStatus.PENDING);
+
+    expect(found?.getDetail()
+                .getRegisteredAt())
       .toBeDefined();
   });
 

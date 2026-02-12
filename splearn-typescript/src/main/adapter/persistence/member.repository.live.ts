@@ -2,10 +2,10 @@ import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { Email } from "@src/main/domain/email";
-import { Member } from "@src/main/domain/member";
+import { Email } from "@src/main/domain/shared/email";
+import { Member } from "@src/main/domain/member/member";
 
-import type { MemberRepository } from "@src/main/application/required/member.repository";
+import type { MemberRepository } from "@src/main/application/member/required/member.repository";
 
 
 @Injectable()

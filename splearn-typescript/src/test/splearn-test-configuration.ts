@@ -1,7 +1,7 @@
-import { Email } from "@src/main/domain/email";
-import { createPasswordEncoder } from "@src/test/domain/member.fixture";
+import { Email } from "@src/main/domain/shared/email";
+import { createPasswordEncoder } from "@src/test/domain/member/member.fixture";
 
-import type { PasswordEncoder } from "@src/main/domain/password-encoder";
+import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
 
 export class SplearnTestConfiguration {
   emailSender() {

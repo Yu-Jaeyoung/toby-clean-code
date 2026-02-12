@@ -1,6 +1,6 @@
 import { describe, expect, it, spyOn } from "bun:test";
 
-import { Email } from "@src/main/domain/email";
+import { Email } from "@src/main/domain/shared/email";
 import { DummyEmailSender } from "@src/main/adapter/integration/dummy-email-sender";
 
 describe("Dummy Email Sender Test", () => {

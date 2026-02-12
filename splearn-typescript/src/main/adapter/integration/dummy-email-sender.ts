@@ -1,6 +1,6 @@
-import { Email } from "@src/main/domain/email";
+import { Email } from "@src/main/domain/shared/email";
 
-import type { EmailSender } from "@src/main/application/required/email-sender";
+import type { EmailSender } from "@src/main/application/member/required/email-sender";
 
 export class DummyEmailSender implements EmailSender {
   send(
