@@ -7,6 +7,7 @@ import { MemberRegisterRequest } from "@src/main/domain/member-register-request"
 import { IllegalArgumentException } from "@src/common/exception/exceptions";
 
 import type { PasswordEncoder } from "@src/main/domain/password-encoder";
+import { MemberDetail } from "@src/main/domain/member-detail";
 
 @Entity()
 export class Member {
@@ -38,6 +39,9 @@ export class Member {
     default: MemberStatus.PENDING,
   })
   private status: MemberStatus;
+
+  @Column(() => MemberDetail, { prefix: false })
+  private detail: MemberDetail;
 
   protected constructor() {
   }
