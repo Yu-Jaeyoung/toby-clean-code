@@ -1,8 +1,10 @@
 import { AppModule } from "@src/app.module";
 import { NestFactory } from "@nestjs/core";
 
-import type { NestExpressApplication } from "@nestjs/platform-express";
 import { ValidationPipe } from "@nestjs/common";
+import { ApiControllerAdviceFilter } from "@src/main/adapter/webapi/api-controller-advice";
+
+import type { NestExpressApplication } from "@nestjs/platform-express";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -16,6 +18,8 @@ async function bootstrap() {
       },
     ),
   );
+
+  app.useGlobalFilters(new ApiControllerAdviceFilter());
 
   await app.listen(process.env.PORT || 3000);
 }

@@ -1,31 +1,36 @@
-import { afterAll, beforeAll, describe, expect, it, mock } from "bun:test";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "bun:test";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import { MemberController } from "@src/main/adapter/webapi/member.controller";
-import { createMember } from "@src/test/domain/member/member.fixture";
-import { MemberRegister } from "@src/main/application/member/provided/member-register";
-import { MEMBER_REGISTER } from "@src/app.token";
+import { DataSource } from "typeorm";
 
-describe("Member API Test", () => {
+import { AppModule } from "@src/app.module";
+import { EMAIL_SENDER, MEMBER_REGISTER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
+import { MemberStatus } from "@src/main/domain/member/member-status";
+import { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
+import { SplearnTestConfiguration } from "@src/test/splearn-test-configuration";
+
+import type { MemberRegister } from "@src/main/application/member/provided/member-register";
+import type { MemberRepository } from "@src/main/application/member/required/member.repository";
+
+describe("MemberApiTest", () => {
   let app: INestApplication;
   let baseUrl: string;
+  let dataSource: DataSource;
+  let memberRepository: MemberRepository;
+  let memberRegister: MemberRegister;
 
-  const registerMock = mock(async() => createMember(1));
-  const memberRegisterMock: Pick<MemberRegister, "register"> = {
-    register: registerMock,
-  };
+  const config = new SplearnTestConfiguration();
 
   beforeAll(async() => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-                                                     controllers: [ MemberController ],
-                                                     providers: [
-                                                       {
-                                                         provide: MEMBER_REGISTER,
-                                                         useValue: memberRegisterMock,
-                                                       },
-                                                     ],
-                                                   })
-                                                   .compile();
+    const moduleFixture: TestingModule
+      = await Test.createTestingModule({
+                    imports: [ AppModule ],
+                  })
+                  .overrideProvider(EMAIL_SENDER)
+                  .useValue(config.emailSender())
+                  .overrideProvider(PASSWORD_ENCODER)
+                  .useValue(config.passwordEncoder())
+                  .compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({
@@ -34,9 +39,17 @@ describe("Member API Test", () => {
       transform: true,
     }));
 
+    memberRepository = moduleFixture.get<MemberRepository>(MEMBER_REPOSITORY);
+    memberRegister = moduleFixture.get<MemberRegister>(MEMBER_REGISTER);
+    dataSource = moduleFixture.get<DataSource>(DataSource);
+
     await app.init();
     await app.listen(0);
     baseUrl = await app.getUrl();
+  });
+
+  beforeEach(async() => {
+    await dataSource.synchronize(true);
   });
 
   afterAll(async() => {
@@ -46,45 +59,58 @@ describe("Member API Test", () => {
   });
 
   it("register", async() => {
-    registerMock.mockClear();
-    registerMock.mockResolvedValue(createMember(1));
-
     const request = {
       email: "jaeyoung@splearn.app",
       nickname: "jaeyoung",
       password: "secret1234",
     };
 
-    const response = await postRegister(baseUrl, request);
+    const result = await postRegister(baseUrl, request);
 
-    expect(response.status)
+    expect(result.status)
       .toBe(200);
 
-    const body = await response.json();
-    expect(body.memberId)
-      .toBe(1);
+    const response = await result.json() as { memberId: number; emailAddress: string };
 
-    expect(registerMock)
-      .toHaveBeenCalledTimes(1);
-    expect(registerMock)
-      .toHaveBeenCalledWith(expect.objectContaining(request));
+    expect(response.memberId)
+      .toBeDefined();
+
+    expect(response.emailAddress)
+      .toBe(request.email);
+
+    const member = await memberRepository.findById(response.memberId);
+
+    expect(member)
+      .toBeDefined();
+
+    expect(member?.getEmail()
+      .address)
+      .toBe(request.email);
+
+    expect(member?.getNickname())
+      .toBe(request.nickname);
+
+    expect(member?.getStatus())
+      .toBe(MemberStatus.PENDING);
   });
 
-  it("register fail", async() => {
-    registerMock.mockClear();
+  it("duplicateEmail", async() => {
+    const request = new MemberRegisterRequest(
+      "jaeyoung@splearn.app",
+      "jaeyoung",
+      "secret1234",
+    );
 
-    const request = {
-      email: "invalid email",
-      nickname: "jaeyoung",
-      password: "secret1234",
-    };
+    await memberRegister.register(request);
 
-    const response = await postRegister(baseUrl, request);
+    const result = await postRegister(baseUrl, {
+      email: request.email,
+      nickname: request.nickname,
+      password: request.password,
+    });
 
-    expect(response.status)
-      .toBe(400);
-    expect(registerMock)
-      .toHaveBeenCalledTimes(0);
+    expect(result.status)
+      .toBe(500);
   });
 });
 
