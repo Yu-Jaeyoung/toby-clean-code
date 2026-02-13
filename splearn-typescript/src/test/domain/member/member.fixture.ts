@@ -1,5 +1,6 @@
 import { MemberRegisterRequest } from "@src/main/domain/member/member-register-request";
 import type { PasswordEncoder } from "@src/main/domain/member/password-encoder";
+import { Member } from "@src/main/domain/member/member";
 
 export function createPasswordEncoder(): PasswordEncoder {
   return {
@@ -22,4 +23,16 @@ export function createMemberRegisterRequest(email?: string) {
     "jaeyoung",
     "secret",
   );
+}
+
+export function createMember(id?: number): Member {
+  if (id) {
+    const member = Member.register(createMemberRegisterRequest(), createPasswordEncoder());
+
+    member.setId(id);
+
+    return member;
+  }
+
+  return Member.register(createMemberRegisterRequest(), createPasswordEncoder());
 }

@@ -12,7 +12,8 @@ import { MemberQueryService } from "@src/main/application/member/member-query.se
 import { MemberModifyService } from "@src/main/application/member/member-modify.service";
 import { MemberRepositoryLive } from "@src/main/adapter/persistence/member.repository.live";
 
-import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
+import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REGISTER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
+import { MemberController } from "@src/main/adapter/webapi/member.controller";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from
     }),
     TypeOrmModule.forFeature([ Member, MemberDetail, Email, Profile ]),
   ],
+  controllers: [ MemberController ],
   exports: [ MemberModifyService, MemberQueryService ],
   providers: [
     MemberModifyService,
@@ -47,6 +49,10 @@ import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from
     {
       provide: MEMBER_FINDER,
       useClass: MemberQueryService,
+    },
+    {
+      provide: MEMBER_REGISTER,
+      useExisting: MemberModifyService,
     },
   ],
 
