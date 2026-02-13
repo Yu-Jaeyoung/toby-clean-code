@@ -22,7 +22,7 @@ import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from
     TypeOrmModule.forRoot({
       type: "postgres",
       url: process.env.DATABASE_URL,
-      entities: [ Member, MemberDetail, Email, Profile ],
+      entities: [ Member, MemberDetail ],
       synchronize: true,
       dropSchema: true,
     }),

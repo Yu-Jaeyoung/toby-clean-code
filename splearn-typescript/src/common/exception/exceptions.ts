@@ -18,3 +18,10 @@ export class DuplicateEmailException extends Error {
     this.name = "DuplicateEmailException";
   }
 }
+
+export class DuplicateProfileException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "DuplicateProfileException";
+  }
+}

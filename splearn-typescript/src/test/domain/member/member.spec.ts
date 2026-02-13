@@ -138,4 +138,13 @@ describe("MemberTest", () => {
       .toEqual(request.getIntroduction());
 
   });
+
+  it("should update info fail", () => {
+    expect(() => {
+        const request = new MemberInfoUpdateRequest("jacky", "jacky", "hi");
+        member.updateInfo(request);
+      },
+    )
+      .toThrow(IllegalStateException);
+  });
 });

@@ -16,10 +16,6 @@ export class Profile {
       throw new IllegalArgumentException("Profile length exceeds limit");
     }
 
-    if (address === "") {
-      throw new IllegalArgumentException("Invalid profile format");
-    }
-
     this.address = address;
   }
 

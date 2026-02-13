@@ -7,11 +7,10 @@ describe("ProfileTest", () => {
     new Profile("jaeyoung");
     new Profile("jaeyoung100");
     new Profile("1368");
+    new Profile("");
   });
 
   it("should throw error with invalid profile", () => {
-    expect(() => new Profile(""))
-      .toThrow(IllegalArgumentException);
     expect(() => new Profile("toolongtoolongtoolongtoolong"))
       .toThrow(IllegalArgumentException);
     expect(() => new Profile("A"))
@@ -22,7 +21,7 @@ describe("ProfileTest", () => {
 
   it("should return url", () => {
     const profile = new Profile("jaeyoung");
-    
+
     expect(profile.url())
       .toBe("@jaeyoung");
   });

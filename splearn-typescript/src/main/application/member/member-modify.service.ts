@@ -2,7 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 
 import { Email } from "@src/main/domain/shared/email";
 import { Member } from "@src/main/domain/member/member";
-import { DuplicateEmailException } from "@src/common/exception/exceptions";
+import { Profile } from "@src/main/domain/member/profile";
+import { MemberInfoUpdateRequest } from "@src/main/domain/member/member-info-update-request";
+import { DuplicateEmailException, DuplicateProfileException } from "@src/common/exception/exceptions";
 
 import { EMAIL_SENDER, MEMBER_FINDER, MEMBER_REPOSITORY, PASSWORD_ENCODER } from "@src/app.token";
 
@@ -39,11 +41,52 @@ export class MemberModifyService implements MemberRegister {
   }
 
   async activate(memberId: number): Promise<Member> {
-    const member = await this.memberFinder.find(memberId)
+    const member = await this.memberFinder.find(memberId);
 
     member.activate();
 
     return await this.memberRepository.save(member);
+  }
+
+  async deactivate(memberId: number): Promise<Member> {
+    const member = await this.memberFinder.find(memberId);
+
+    member.deactivate();
+
+    return await this.memberRepository.save(member);
+  }
+
+  async updateInfo(
+    memberId: number,
+    memberInfoUpdateRequest: MemberInfoUpdateRequest,
+  ): Promise<Member> {
+    const member = await this.memberFinder.find(memberId);
+
+    await this.checkDuplicateProfile(member, memberInfoUpdateRequest.getProfileAddress());
+
+    member.updateInfo(memberInfoUpdateRequest);
+
+    return await this.memberRepository.save(member);
+  }
+
+  private async checkDuplicateProfile(
+    member: Member,
+    profileAddress: string,
+  ) {
+    if (profileAddress === "") {
+      return;
+    }
+
+    const currentProfile = member.getDetail()
+                                 .getProfile();
+
+    if (currentProfile !== null && currentProfile.getAddress() === profileAddress) {
+      return;
+    }
+
+    if (await this.memberRepository.findByProfile(new Profile(profileAddress))) {
+      throw new DuplicateProfileException(`already in used profile address: ${ profileAddress }`);
+    }
   }
 
   private sendWelcomeEmail(member: Member) {
@@ -55,4 +98,5 @@ export class MemberModifyService implements MemberRegister {
       throw new DuplicateEmailException(`already in used: ${ registerRequest.email }`);
     }
   }
+
 }

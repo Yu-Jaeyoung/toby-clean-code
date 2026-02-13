@@ -6,6 +6,7 @@ import { Email } from "@src/main/domain/shared/email";
 import { Member } from "@src/main/domain/member/member";
 
 import type { MemberRepository } from "@src/main/application/member/required/member.repository";
+import { Profile } from "@src/main/domain/member/profile";
 
 
 @Injectable()
@@ -25,5 +26,9 @@ export class MemberRepositoryLive implements MemberRepository {
 
   async findById(memberId: number): Promise<Member | null> {
     return await this.repository.findOne({ where: { id: memberId } as any });
+  }
+
+  async findByProfile(profile: Profile): Promise<Member | null> {
+    return await this.repository.findOne({ where: { detail: { profile: profile } } as any });
   }
 }

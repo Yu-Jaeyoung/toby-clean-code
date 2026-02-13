@@ -132,6 +132,8 @@ export class Member {
   }
 
   updateInfo(updateRequest: MemberInfoUpdateRequest) {
+    Assert.state(this.getStatus() === MemberStatus.ACTIVE, "Only active members can update info");
+
     this.nickname = updateRequest.getNickname();
 
     this.detail.updateInfo(updateRequest);
